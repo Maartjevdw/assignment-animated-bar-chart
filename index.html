@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opdracht A: Animated bar chart </title>
+
+    </style>
+
+</head>
+
+<body>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script>
+
+        // d3.select('head').append('style').text('.bar fill: orange; } ');
+        // d3.select('body').append('div').attr('id', "chart");
+
+        // let arr1 = [5, 10, 18, 24, 44, 57, 60];
+        // let arr2 = [22, 30, 15, 50];
+        // let arr3 = [17, 25, 70, 33, 42, 51, 63, 48, 36];
+        // let arrData
+
+        // // let arrData = arr1;
+
+        // d3.select('body').append('button').text('arr1').attr("data-knop", "knop1").on('click', knop);
+        // d3.select('body').append('button').text('arr2').attr("data-knop", "knop2").on('click', knop);
+        // d3.select('body').append('button').text('arr3').attr("data-knop", "knop3").on('click', knop);
+
+        // function knop() {
+        //     let knop = this.getAttribute("data-knop");
+        //     if (knop == "knop1") arrData = arr1;
+        //     if (knop == "knop2") arrData = arr2;
+        //     if (knop == "knop3") arrData = arr3;
+
+        // }
+
+        // hier komt d3, werken met arrData;
+
+        const allArrays = [
+            [5, 10, 18, 24, 44, 57, 60],
+            [22, 30, 15, 50],
+            [17, 25, 70, 33, 42, 51, 63, 48, 36]
+        ];
+
+        let arrData = allArrays[0];
+
+        const body = d3.select('body');
+
+        d3.select('body').append('button').text('arr1').attr('data-knop', '0').on('click', knop);
+        d3.select('body').append('button').text('arr2').attr('data-knop', '1').on('click', knop);
+        d3.select('body').append('button').text('arr3').attr('data-knop', '2').on('click', knop);
+
+        
+        const svgWidth = 270,
+            svgHeight = 270;
+
+        const svg = body.append('svg')
+            .attr('width', svgWidth)
+            .attr('height', svgHeight);
+
+        const xScale = d3.scaleLinear()
+            .domain([d3.min([].concat(allArrays[0], allArrays[1], allArrays[2])), d3.max([].concat(allArrays[0], allArrays[1], allArrays[2]))])
+            .range([0, svgWidth]);
+
+        bars(arrData);
+
+        function knop() {
+            let index = this.getAttribute('data-knop');
+            arrData = allArrays[index];
+
+            bars(arrData);
+        }
+
+
+// update/enter/exit principe
+
+        function bars(arrData) {
+            const update = svg.selectAll('rect')
+                .data(arrData);
+
+            update.exit()
+            .transition()
+            .duration(3000)
+            .style('opacity', 0)
+            .remove();
+
+            const enter = update.enter()
+                .append('rect')
+                .attr('y', (d, i) => {
+                    return (i * 25)
+                })
+                .attr('width', (d) => {
+                    return d * 5
+                })
+                .attr('height', '20')
+                .attr('fill', 'hotpink');
+
+            enter.merge(update)
+                .transition()
+                .duration(3000)
+                .attr('width', (d) => {
+                    return d * 5
+                })
+        }
+
+
+
+    </script>
+</body>
+
+</html>
